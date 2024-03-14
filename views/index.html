@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Message Board</title>
+  <meta name="description" content="A cool thing made with HyperDev">
+  <link id="favicon" rel="icon" href="https://hyperdev.com/favicon-app.ico" type="image/x-icon">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./public/style.css">
+</head>
+<body>
+  <header>
+    <h1>Message Board</h1>
+  </header>
+  <hr />
+  <h2 id="searchingTitle">Searching:</h2>
+    <ul>
+      <li>Use /api/threads/{board} to get the most recent 10 bumped threads on the board with only the most recent 3 replies </li>
+      <li>Use /api/replies/{board}?thread_id={thread_id} to get an entire thread with all its replies.</li>
+    </ul>
+  </h2>
+  <hr>
+  <div id='testui'>
+    <h2>Thread and Replies controls:</h2>
+    <section id="formWrapper">
+      <section class="crudForms">
+        <h4>New thread (POST /api/threads/:board)</h4>  
+        <form action="/api/threads/:board" method="post" id="newThread" class="forms">
+          <input type='text' placeholder='board' id='board1' name='board' class='setInputWidth' required=''>
+          <textarea type='text' placeholder='Thread text...' name='text'  class='.setTextAWidth' required=''></textarea>
+          <input type='text' placeholder='password to delete' name='delete_password'  class='setInputWidth' required=''>
+          <input type="submit" value="Submit">
+        </form>
+      </section>
+      <section class="crudForms">
+        <h4>Report thread (PUT /api/threads/:board)</h4>    
+          <form id="reportThread" method="post" action="/api/threads/:board?_method=PUT" class="forms">
+            <input type='text' placeholder='board' id='board2' name='board' class='setInputWidth' required=''>
+            <input type='text' placeholder='id to report' name='thread_id' class='setInputWidth' required=''>
+            <input type="submit" value="Submit">
+          </form>
+      </section>
+      <section class="crudForms">
+        <h4>Delete thread (DELETE /api/threads/:board)</h4>
+        <form id="deleteThread" method="post" action="/api/threads/:board?_method=DELETE" class="forms">
+          <input type='text' placeholder='board' id='board3' name='board'  class='setInputWidth' required=''>
+          <input type='text' placeholder='id to delete' name='thread_id'  class='setInputWidth' required=''>
+          <input type='text' placeholder='password' name='delete_password'  class='setInputWidth' required=''>
+          <input type="submit" value="Submit">
+        </form>
+      </section>
+      <section class="crudForms">
+        <h4>New reply (POST /api/replies/:board)</h4>
+        <form action="/api/replies/:board" method="post" id="newReply" class="forms">
+          <input type='text' placeholder='board' id='board4' name='board'  class='setInputWidth' required=''>
+          <input type='text' placeholder='thread id' name='thread_id'  class='setInputWidth' required=''>
+          <textarea type='text' placeholder='Thread text...' name='text'  class='.setTextAWidth' required=''></textarea>
+          <input type='text' placeholder='password to delete' name='delete_password'  class='setInputWidth' required=''>
+          <input type="submit" value="Submit">
+        </form>
+      </section>
+      <section class="crudForms">
+        <h4>Report reply (PUT /api/replies/:board)</h4>
+        <form id="reportReply" method="post" action="/api/replies/:board?_method=PUT" class="forms">
+          <input type='text' placeholder='board' id='board5' name='board'  class='setInputWidth' required=''>
+          <input type='text' placeholder='thread id' name='thread_id'  class='setInputWidth' required=''>
+          <input type='text' placeholder='id to report' name='reply_id'  class='setInputWidth' required=''>
+          <input type="submit" value="Submit">
+        </form>
+      </section>
+      <section class="crudForms">
+        <h4>Delete reply (DELETE /api/replies/:board)</h4>
+        <form id="deleteReply" method="post" action="/api/replies/:board?_method=DELETE" class="forms">
+          <input type='text' placeholder='board' id='board6' name='board' class='setInputWidth'  required=''>
+          <input type='text' placeholder='thread id' name='thread_id'  class='setInputWidth' required=''>
+          <input type='text' placeholder='id to delete' name='reply_id'  class='setInputWidth' required=''>
+          <input type='text' placeholder='password' name='delete_password'  class='setInputWidth' required=''>
+          <input type="submit" value="Submit">
+        </form>
+      </section>
+  </div>
+  </section>
+  <!-- Your web-app is https, so your scripts need to be too -->
+  <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+          integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+          crossorigin="anonymous"></script>
+  <script>
+    $(function () {
+      $('#newThread').submit(function () {
+        var board = $('#board1').val();
+        $(this).attr('action', "/api/threads/" + board);
+      });
+      $('#newReply').submit(function () {
+        var board = $('#board4').val();
+        $(this).attr('action', "/api/replies/" + board);
+      });
+      $('#reportThread').submit(function (e) {
+        var url = "/api/threads/" + $('#board2').val();
+        $.ajax({
+          type: "PUT",
+          url: url,
+          data: $(this).serialize(),
+          success: function (data) {
+            alert(data);
+          }
+        });
+        e.preventDefault();
+      });
+      $('#deleteThread').submit(function (e) {
+        var url = "/api/threads/" + $('#board3').val();
+        $.ajax({
+          type: "DELETE",
+          url: url,
+          data: $(this).serialize(),
+          success: function (data) {
+            alert(data);
+          }
+        });
+        e.preventDefault();
+      });
+      $('#reportReply').submit(function (e) {
+        var url = "/api/replies/" + $('#board5').val();
+        $.ajax({
+          type: "PUT",
+          url: url,
+          data: $(this).serialize(),
+          success: function (data) {
+            alert(data);
+          }
+        });
+        e.preventDefault();
+      });
+      $('#deleteReply').submit(function (e) {
+        var url = "/api/replies/" + $('#board6').val();
+        $.ajax({
+          type: "DELETE",
+          url: url,
+          data: $(this).serialize(),
+          success: function (data) {
+            alert(data);
+          }
+        });
+        e.preventDefault();
+      });
+    });
+  </script>
+</body>
+</html>
